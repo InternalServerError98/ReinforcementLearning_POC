@@ -1,0 +1,6 @@
+#ignore env variables
+.env
+
+#ignore files in Feedback and Testing
+Feedback/
+Testing/
