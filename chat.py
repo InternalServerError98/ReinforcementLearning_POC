@@ -1,21 +1,23 @@
 import openai
 import base64
 import requests
-from PIL import Image
 import io
 from dotenv import load_dotenv
 import os
 import gradio as gr
+from pathlib import Path
+import json
+import feedback
 
 
 load_dotenv()
 openai.api_key = os.getenv("OPEN_AI_KEY") #set auth key for Open AI
-MODEL_NAME = os.getenv("MODEL_NAME") #set the model name, this must be the most recently fine tuned model
+
 #System prompt that goes to llm
 SYSTEM_PROMPT = 'You are trying to generate prompts for these images. Your job is to describe the image and all its functions/designs in a way that LLMs or other models can develop seamless UI components from it.'
 
 #Feedback URL
-FEEDBACk_URL = os.getenv("FEEDBACK_URL")
+FEEDBACK_URL = os.getenv("FEEDBACK_URL")
 
 #Most recent output
 GENERATED_OUTPUT = ''
@@ -27,12 +29,35 @@ def image_to_base64(image):
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
 
+def load_model_config():
+    CONFIG_PATH = Path("model_config.json")
+
+    if CONFIG_PATH.exists():
+        with open(CONFIG_PATH, "r") as f:
+            return json.load(f)
+    else:
+        return {"current_model_id": None, "model_history": []}
+
+
+#SET Most Recent Model
+def getMostRecentModel():
+    config = load_model_config()
+    MODEL_NAME = config['current_model_id']
+    print(f"using model {MODEL_NAME} for chat completion.")
+    return MODEL_NAME
+
 
 # Get model response
 def generate_prompt(user_text, image):
+
+    global GENERATED_OUTPUT #ref the global output
+
+
     if not user_text and not image:
         return "⚠️ Please provide a text prompt, an image, or both."
     
+    #Get most recent model
+    MODEL = getMostRecentModel()
 
     messages = [
         {
@@ -70,7 +95,7 @@ def generate_prompt(user_text, image):
     })
 
     response = openai.chat.completions.create(
-        model=MODEL_NAME,
+        model=MODEL,
         messages=messages,
         response_format={
             "type": "text"
@@ -86,7 +111,7 @@ def generate_prompt(user_text, image):
     return GENERATED_OUTPUT
 
 #Store feedback for retraining
-def submit_feedback(image_input, output_box, feedback_box):
+def submit_feedback(text_prompt, image_input, output_box, feedback_box):
 
     if not image_input or GENERATED_OUTPUT == output_box:
         return "⚠️ Learning updates must include an image and changes to the output."
@@ -94,6 +119,7 @@ def submit_feedback(image_input, output_box, feedback_box):
     image_b64 = image_to_base64(image_input)
 
     payload = {
+        "text_prompt": text_prompt,
         "image_base64": image_b64,
         "generated_output": GENERATED_OUTPUT,
         "corrected_output": output_box,
@@ -101,7 +127,7 @@ def submit_feedback(image_input, output_box, feedback_box):
     }
 
     try:
-        res = requests.post(FEEDBACk_URL, json=payload)
+        res = requests.post(FEEDBACK_URL, json=payload)
         if res.ok:
             return "✅ Feedback submitted!"
         else:
@@ -121,7 +147,7 @@ def chatUI():
             image_input = gr.Image(type="pil", label="Upload a UI Screenshot (Optional)")
 
         with gr.Row():
-            output_box = gr.Textbox(label="Model Output (Editable for correction)", lines=12)
+            output_box = gr.Textbox(label="Model Output (Modfiy for correction)", lines=12)
             feedback_box = gr.Textbox(label="Any Feedback (Optional)", lines=12, placeholder="Enter additional comments here if needed.")
 
         with gr.Row():
@@ -131,7 +157,7 @@ def chatUI():
         alert_output = gr.HTML()
 
         generate_btn.click(fn=generate_prompt, inputs=[text_prompt, image_input], outputs=output_box)
-        submit_btn.click(fn=submit_feedback, inputs=[image_input, output_box, feedback_box], outputs=alert_output)
+        submit_btn.click(fn=submit_feedback, inputs=[text_prompt, image_input, output_box, feedback_box], outputs=alert_output)
 
 
     demo.launch()
