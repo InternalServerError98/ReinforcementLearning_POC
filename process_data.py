@@ -16,9 +16,9 @@ VALIDATION_OUTPUT_DIR = os.getenv("VALIDATION_OUTPUT_PATH")
 TRAINING_JSONL_PATH = 'training_data.jsonl'
 VALIDATION_JSONL_PATH = 'validation_data.jsonl'
 
-
+# Add variations to the user prompt to make it more diverse, if you are using explicit user prompts later.
 USER_PROMPT_VARIANTS = [
-    "Generate a prompt for this UI"
+    "Generate a prompt for this."
 ]
 
 #SYSTEM_PROMPT = "You are a lead prompt Engineer. You are trying to generate prompts from the UI images presented to you. Your job is to describe the image and all its funcions/designs in a way that LLMs or other models can develop seamless UI components from it."
@@ -157,25 +157,6 @@ def generate_jsonl(JSONL_PATH, INPUT_DIR, OUTPUT_DIR):
 
             "messages": MessageHead
         }
-        # entry = {
-        #     "messages": [
-        #         {
-        #             "role": "system",
-        #             "content": SYSTEM_PROMPT
-        #         }, 
-        #         {
-        #             "role": "user",
-        #             "content": [
-        #                 {"type": "text", "text": prompt_text},
-        #                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_b64}"}}
-        #             ]
-        #         },
-        #         {
-        #             "role": "assistant",
-        #             "content": formatted_text
-        #         }
-        #     ]
-        # }
 
         entries.append(entry)
 

@@ -54,12 +54,13 @@ def getMostRecentModel():
 
 # Get model response
 def generate_prompt(user_text, image):
+    
 
     global GENERATED_OUTPUT #ref the global output
 
 
-    if not user_text and not image:
-        return "⚠️ Please provide a text prompt, an image, or both."
+    if not image:
+        return "⚠️ Please provide an image."
     
     #Get most recent model
     MODEL = getMostRecentModel()
@@ -207,6 +208,7 @@ def generate_prompt(user_text, image):
 
 #Store feedback for retraining
 def submit_feedback(text_prompt, image_input, output_box, feedback_box):
+    
 
     if not image_input or GENERATED_OUTPUT == output_box:
         return "⚠️ Learning updates must include an image and changes to the output."
@@ -235,15 +237,22 @@ def submit_feedback(text_prompt, image_input, output_box, feedback_box):
 
 def chatUI():
     with gr.Blocks() as demo:
-        gr.Markdown("## 🧠 Bob, the UI-to-Prompt Generator (he's learning)")
+        gr.Markdown("## UI-to-Prompt Generator")
 
         with gr.Row():
-            text_prompt = gr.Textbox(label="Describe what you want (Optional)", placeholder="e.g. Hey! Generate this prompt.")
-            image_input = gr.Image(type="pil", label="Upload a UI Screenshot (Optional)")
+          # LEFT COLUMN: Inputs
+          with gr.Column(scale=1):
+            text_prompt = gr.Textbox(
+               label="Default Value",
+               value="Generate a prompt for this.",
+               visible=False,  # Hidden by default
+              ) 
+            image_input = gr.Image(type="pil", label="🖼️ Upload UI Screenshot (Optional)")
+            feedback_box = gr.Textbox(label="📝 Feedback (Optional)", lines=6, placeholder="Enter any feedback or corrections here...")
 
-        with gr.Row():
-            output_box = gr.Textbox(label="Model Output (Modfiy for correction)", lines=12)
-            feedback_box = gr.Textbox(label="Any Feedback (Optional)", lines=12, placeholder="Enter additional comments here if needed.")
+          # RIGHT COLUMN: Model Output
+          with gr.Column(scale=1):
+            output_box = gr.Textbox(label="💡 Model Output (You can edit this)", lines=25)
 
         with gr.Row():
             generate_btn = gr.Button("🔍 Generate Prompt")
@@ -251,8 +260,8 @@ def chatUI():
 
         alert_output = gr.HTML()
 
-        generate_btn.click(fn=generate_prompt, inputs=[text_prompt, image_input], outputs=output_box)
-        submit_btn.click(fn=submit_feedback, inputs=[text_prompt, image_input, output_box, feedback_box], outputs=alert_output)
+        generate_btn.click(fn=generate_prompt, inputs=[text_prompt,image_input], outputs=output_box)
+        submit_btn.click(fn=submit_feedback, inputs=[text_prompt,image_input, output_box, feedback_box], outputs=alert_output)
 
 
     demo.launch()

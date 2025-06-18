@@ -1,5 +1,4 @@
 #ignore env variables
-.env
 
 #ignore files in Feedback and Data
 Feedback/
