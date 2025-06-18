@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 import uvicorn
 
 
+
+load_dotenv()  # ✅ This loads the .env file into the environment
+
 MESSAGE_HEAD = [
         {
         "role": "system",

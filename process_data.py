@@ -1,13 +1,11 @@
 import os
 import base64
 import json
-from dotenv import load_dotenv
 import random
 from striprtf.striprtf import rtf_to_text
+from dotenv import load_dotenv
 
-
-# load all environment variables
-load_dotenv()
+load_dotenv()  # ✅ This loads the .env file into the environment
 
 TRAINING_INPUT_DIR = os.getenv("INPUT_FILE_PATH")
 TRAINING_OUTPUT_DIR = os.getenv("OUTPUT_FILE_PATH")
@@ -20,18 +18,95 @@ VALIDATION_JSONL_PATH = 'validation_data.jsonl'
 
 
 USER_PROMPT_VARIANTS = [
-    "Describe the UI shown in the image below.",
-    "What UI components do you see in this screenshot?",
-    "Give me a breakdown of this screen.",
-    "Generate a prompt for this design", 
-    "Help me generating a prompt for this design",
-    "What are the components of this screen",
-    "Generate a prompt for this UI", 
-    "Help me build this UI", 
-    "Help me build a prompt for this UI"
+    "Generate a prompt for this UI"
 ]
 
-SYSTEM_PROMPT = "You are a lead prompt Engineer. You are trying to generate prompts from the UI images presented to you. Your job is to describe the image and all its funcions/designs in a way that LLMs or other models can develop seamless UI components from it."
+#SYSTEM_PROMPT = "You are a lead prompt Engineer. You are trying to generate prompts from the UI images presented to you. Your job is to describe the image and all its funcions/designs in a way that LLMs or other models can develop seamless UI components from it."
+
+MessageHead = [
+    {
+      "role": "system",
+      "content": [
+        {
+          "text": "You are a senior prompt engineer. You convert designs to prompts that help LLMs translate them into code.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "text": "Remember to adhere to the following metrics : \n\nYou have to recursively break down the page into smaller elements while describing their position and functionality. \n\nFollow this naming convention\n\nSection - [Section 1, Section 2]\n\n**Section 1**\n-- Generic Desc\n****SubSection 1.1****\n****SubSection 1.2****\n\n**Section 2**\n.......\n\nAnd so on. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "text": "Okay !",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "text": "Always respond in markdown, always!",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "text": "Understood. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "text": "In terms of description, apart from how the page looks you must describe functionality. \n\nButtons: must add prompts to generate place holder on clicks. \nLinks: must have placeholder routers.\nSelectboxes: Must have placeholder loaders. \n\nYou must add these for other associated components.\n",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "text": "Understood. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "text": "Lastly, think like a developer. Implement lazy loading, scrolling to bottom, responsiveness etc whenever required. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "text": "Got it, I am ready now.",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+
 
 # Creating the Jsonl file to load the data. 
 def encode_image_base64(image_path):
@@ -62,25 +137,45 @@ def generate_jsonl(JSONL_PATH, INPUT_DIR, OUTPUT_DIR):
 
         prompt_text = random.choice(USER_PROMPT_VARIANTS) #Get a random prompt for this image. Adds variation to training
 
+        MessageHead.append(
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt_text},
+                                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_b64}"}}
+                            ]
+                        } )
+        
+        MessageHead.append(
+                         {
+                            "role": "assistant",
+                            "content": formatted_text
+                         } 
+                        )
         entry = {
-            "messages": [
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt_text},
-                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_b64}"}}
-                    ]
-                },
-                {
-                    "role": "assistant",
-                    "content": formatted_text
-                }
-            ]
+
+
+            "messages": MessageHead
         }
+        # entry = {
+        #     "messages": [
+        #         {
+        #             "role": "system",
+        #             "content": SYSTEM_PROMPT
+        #         }, 
+        #         {
+        #             "role": "user",
+        #             "content": [
+        #                 {"type": "text", "text": prompt_text},
+        #                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_b64}"}}
+        #             ]
+        #         },
+        #         {
+        #             "role": "assistant",
+        #             "content": formatted_text
+        #         }
+        #     ]
+        # }
 
         entries.append(entry)
 
