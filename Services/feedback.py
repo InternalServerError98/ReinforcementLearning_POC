@@ -1,13 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import json
-import os
-from dotenv import load_dotenv
 import uvicorn
+import Env.configuration as configuration
 
-
-
-load_dotenv()  # ✅ This loads the .env file into the environment
 
 MESSAGE_HEAD = [
         {
@@ -41,8 +37,7 @@ MESSAGE_HEAD = [
 
 
 app = FastAPI()
-load_dotenv()
-FEEDBACK_FILE = os.getenv("FEEDBACK_FILE")
+FEEDBACK_FILE = configuration.secrets.FEEDBACK_FILE
 
 class Feedback(BaseModel):
     text_prompt: str

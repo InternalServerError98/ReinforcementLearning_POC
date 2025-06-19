@@ -1,7 +1,7 @@
 from openai import AzureOpenAI
 import process_data
 import os
-import updateConfig
+import Modules_Delete.updateConfig as updateConfig
 from dotenv import load_dotenv
 import time
 

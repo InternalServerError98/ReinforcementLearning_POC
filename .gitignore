@@ -1,15 +1,8 @@
 #ignore env variables
-
-#ignore files in Feedback and Data
-Feedback/
-Data/
-
-#ignore model config
-model_config.json
-
-#ignore training_data and validation data files
-training_data.jsonl
-validation_data.jsonl
+Env/.env.local
 
 #ignore pycache 
 __pycache__/
+
+#Delete Items
+Modules_Delete/

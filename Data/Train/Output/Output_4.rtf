@@ -1,0 +1,103 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Sections \'96 Toolbar, DataTable, PaginationControls\
+\
+**Toolbar**\
+-- Dropdown:\
+   - Label: "Product \uc0\u8593 "\
+   - Type: Sort/Filter selector\
+   - Style: Rounded pill-shape with light-gray background (#f2f2f2)\
+   - Position: Top-left inside toolbar\
+   - Placeholder Icon: Upward arrow indicating current sort direction\
+   - Libraries: DevExtreme dxSelectBox or Material UI Autocomplete (variant="outlined")\
+   - Action: Include placeholder routerLink or onChange handler to apply product filter/sort; user can define later\
+\
+-- Search Input:\
+   - Placeholder: "Search..."\
+   - Type: Text\
+   - Style: Light-gray background (#f9f9f9), thin border, rounded corners\
+   - Position: Top-right inside toolbar\
+   - Libraries: DevExtreme dxTextBox or Material UI TextField (variant="outlined")\
+   - Action: Include placeholder routerLink or onChange handler to perform search query; user can define later\
+\
+-- Layout:\
+   - Use a flex container with justify-content: space-between to separate dropdown and search input horizontally\
+   - Padding: Medium horizontal padding within toolbar\
+   - Background: White or very light gray (#ffffff)\
+\
+**DataTable**\
+-- Table Container:\
+   - Style: White background (#ffffff), light border (#e0e0e0), rounded corners\
+   - Library: DevExtreme DataGrid or Material UI DataGrid Pro\
+   - Props: enable row grouping, expandable rows, and custom cell rendering\
+\
+-- Columns:\
+   1. Sale Amount\
+      - Format: Currency (e.g., "$1,500")\
+      - Alignment: Left-aligned text\
+   2. Discount %\
+      - Visualization: Horizontal blue bar proportional to discount value\
+      - Style: Use a lightweight bar chart cell (DevExtreme\'92s sparkline or MUI LinearProgress)\
+   3. Sale Date\
+      - Format: MM/DD/YYYY (e.g., "5/10/2020")\
+      - Alignment: Center-aligned\
+   4. Region\
+      - Text (e.g., "North America", "Europe", "Asia")\
+      - Alignment: Left-aligned\
+   5. Sector\
+      - Text (e.g., "Health", "Telecom", "Banking")\
+      - Alignment: Left-aligned\
+   6. Channel\
+      - Text (e.g., "Direct", "Retail", "Consultants")\
+      - Alignment: Left-aligned\
+   7. Customer\
+      - Text (e.g., "Environment Solar", "Supply Warehouse")\
+      - Alignment: Left-aligned\
+\
+-- Grouping:\
+   - Group By: Product name (\'93Eco Max\'94, \'93Eco Supreme\'94)\
+   - Group Header: \'93Product: Eco Max\'94 (collapsed by default), \'93Product: Eco Supreme (Continues on the next page)\'94 (expanded)\
+   - Expandable Behavior: Clicking group header toggles expansion\
+   - Include placeholder onGroupClick routing to navigate to Product detail view; user can define later\
+\
+-- Row Styling:\
+   - Alternate row shading: even rows white, odd rows light-gray (#f7f7f7)\
+   - Hover effect: Slight background change on row hover (e.g., #eaeaea)\
+   - Clickable Rows: Entire row clickable; include placeholder onRowClick routing to navigate to Customer or Order detail; user can define later\
+\
+-- Responsive:\
+   - On narrow screens, enable horizontal scrolling or collapse lesser-used columns beneath a \'93More\'94 toggle\
+   - Libraries: DataGrid\'92s responsive props or DevExtreme\'92s columnResizingMode="nextColumn"\
+\
+**PaginationControls**\
+-- Page Size Dropdown:\
+   - Options: [10, 25, 50, 100]\
+   - Style: Small circular pill buttons at bottom-left of table\
+   - Active Button: Filled blue (#2196f3) with white text\
+   - Others: Outline style (#cccccc) with black text\
+   - Include placeholder onChange handler to update rows per page; user can define later\
+\
+-- Page Navigation:\
+   - Buttons: \'931 2 3 4 5 \'85 42\'94\
+   - Current Page: \'931\'94 highlighted in filled blue circle (#2196f3) with white text\
+   - Other pages: Outline circles (#cccccc) with black text\
+   - Ellipsis indicates more pages beyond the visible range\
+   - Include placeholder onPageClick routing to load corresponding dataset page; user can define later\
+\
+-- Layout:\
+   - Use flex container to align page-size buttons on left and page-navigation on right\
+   - Padding: Small vertical padding between table and controls\
+   - Background: Transparent or matching table container background\
+\
+**Insights**\
+-- This UI resembles DevExtreme DataGrid styling (grouped rows, expandable indicators, built-in pagination), though Material UI DataGrid Pro could also be used.\
+-- Discount bars can be implemented via DevExtreme sparkline or MUI LinearProgress component inside table cells.\
+-- For routing placeholders, include attributes like `[routerLink]="'/product/:id'"` on group headers and `[routerLink]="'/customer/:name'"` on row clicks \'97 developers can replace with actual dynamic IDs later.\
+-- Use virtualization or lazy loading if total rows exceed pagination limits for performance.\
+-- Ensure the search/filter toolbar remains sticky when scrolling large tables for better UX.\
+}

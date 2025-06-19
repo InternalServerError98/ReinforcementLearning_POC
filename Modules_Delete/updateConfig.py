@@ -27,7 +27,7 @@ def updateModel(jobid: str):
 
     while True:
         job_status = openai.fine_tuning.jobs.retrieve(jobid)
-        #status = job_status["status"]
+       
         status = job_status.status
         print(f"Job {jobid} status: {status}")
         

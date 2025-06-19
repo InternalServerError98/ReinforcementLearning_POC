@@ -2,6 +2,16 @@
 
 The purpose of this repo, is to fine tune a model instance and increase its performance over time via human in the loop training. 
 
+## Project Structure
+- Clients : here we have the OpenAI / Azure OpenAI and Feedback instances. We use this from the chat and hitl modules to send / recieve data. 
+- Data : All the testing / training data should be stored here. For the sake of convention, use the following convention. 
+    ```bash
+            Input_1, Input_2, Input_3......
+            Output_1, Output_2, Output_3........
+    ```
+
+
+
 ## Steps To Run this Project
 
 - Make sure you have python version > 3.10 installed. (If it is a stable version, it is better).

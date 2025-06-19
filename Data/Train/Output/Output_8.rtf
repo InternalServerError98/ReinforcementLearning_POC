@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Sections \'96 ChatHeader, ChatHistory, ChatInput\
+\
+**ChatHeader**\
+-- Not explicitly shown but inferred to exist at the top of the chat interface (e.g., app bar with title "Support Chat" or "Assistant")\
+-- Can optionally include a user avatar or name; user can define this later\
+-- Layout suggestion: Sticky position, height ~60px, background white or light-gray (#fafafa)\
+\
+**ChatHistory**\
+-- Container displaying ongoing message exchange between user and assistant\
+-- Styling:\
+   - Messages are timestamped (e.g., \'9311:53 PM\'94, \'9312:01 AM\'94)\
+   - Date separator (e.g., \'93Today 6/4/2025\'94) shown between message blocks\
+   - User messages:\
+     \'95 Aligned left\
+     \'95 Grey background (#e0e0e0)\
+     \'95 User initials avatar (circle with \'93JD\'94) to the left\
+     \'95 Multi-line support\
+   - Assistant messages:\
+     \'95 Aligned right\
+     \'95 Light blue background (#e3f2fd)\
+     \'95 Optional emoji (e.g., \uc0\u9989 ) supported inside text content\
+   - Rounded corners on message bubbles\
+   - Spacing between each message block (margin-bottom: 6\'9612px)\
+\
+-- Message Flow Example:\
+   1. Assistant: \'93Hello, John! How can I assist you today?\'94\
+   2. User: \'93Hi, I'm having trouble accessing my account.\'94 \uc0\u8594  \'93It says my password is incorrect.\'94\
+   3. Assistant: \'93Can you please confirm your UserID\'85?\'94\
+   4. User: \'93john.doe1357\'94\
+   5. Assistant: \'93\uc0\u9989  Instructions to restore access\'85\'94\
+\
+-- Libraries: \
+   - Material UI `Box`, `Typography`, `Avatar`, `Paper`, and `Divider`\
+   - Alternatively, use Chakra UI `Flex`, `Text`, and `Badge` components\
+   - Scrollable history container with auto-scroll to latest\
+\
+-- Behavior:\
+   - Auto-scroll to latest message on update\
+   - Optionally add animations (e.g., fade-in for new messages)\
+   - Responsive design for mobile and tablet\
+\
+**ChatInput**\
+-- Text input at the bottom for user to type messages\
+-- Placeholder: \'93Type a message\'94\
+-- Right-side send button (paper-plane icon)\
+-- Input Styling:\
+   - Light gray border\
+   - Full width\
+   - Padding inside input\
+-- Button Action:\
+   - Clicking triggers `onSendMessage()` (placeholder function); user can define logic later\
+   - Optionally support Enter key to send\
+-- Libraries:\
+   - Material UI `TextField` and `IconButton`, or Chakra UI `InputGroup` + `Icon`\
+\
+**Insights**\
+-- This is a classic 1-on-1 support-style chat layout\
+-- Messages are clearly grouped by sender, with time and context\
+-- Real-time integration with a backend (e.g., via WebSocket or polling) is recommended for production\
+-- Consider markdown or rich text support for assistant messages\
+-- Add stateful elements like message status (sent, delivered, seen) in future enhancements\
+}

@@ -1,20 +1,9 @@
-import os
 import base64
 import json
 import random
 from striprtf.striprtf import rtf_to_text
-from dotenv import load_dotenv
-
-load_dotenv()  # ✅ This loads the .env file into the environment
-
-TRAINING_INPUT_DIR = os.getenv("INPUT_FILE_PATH")
-TRAINING_OUTPUT_DIR = os.getenv("OUTPUT_FILE_PATH")
-
-VALIDATION_INPUT_DIR = os.getenv("VALIDATION_INPUT_PATH")
-VALIDATION_OUTPUT_DIR = os.getenv("VALIDATION_OUTPUT_PATH")
-
-TRAINING_JSONL_PATH = 'training_data.jsonl'
-VALIDATION_JSONL_PATH = 'validation_data.jsonl'
+import os
+import Env.configuration as configuration
 
 # Add variations to the user prompt to make it more diverse, if you are using explicit user prompts later.
 USER_PROMPT_VARIANTS = [
@@ -170,9 +159,9 @@ def generate_jsonl(JSONL_PATH, INPUT_DIR, OUTPUT_DIR):
 
 
 def generateTrainingFile():
-    filePath = generate_jsonl(TRAINING_JSONL_PATH, TRAINING_INPUT_DIR, TRAINING_OUTPUT_DIR)
+    filePath = generate_jsonl(configuration.secrets.INPUT_PATH, configuration.secrets.INPUT_FILE_PATH, configuration.secrets.OUTPUT_FILE_PATH)
     return filePath
 
 def generateValidationFile():
-    filePath = generate_jsonl(VALIDATION_JSONL_PATH, VALIDATION_INPUT_DIR, VALIDATION_OUTPUT_DIR)
+    filePath = generate_jsonl(configuration.secrets.OUTUT_PATH, configuration.secrets.VALIDATION_INPUT_PATH, configuration.secrets.VALIDATION_OUTPUT_PATH)
     return filePath
